@@ -32,28 +32,44 @@ function preload() {
 function create() {
   const platforms = this.physics.add.staticGroup();
 
+  platforms.create(320, 350, "platform").setScale(2, 0.5).refreshBody();
+
+  const gameWidth = this.sys.game.canvas.width;
+  const gameHeight = this.sys.game.canvas.height;
+  console.log(gameWidth);
+
   //   Left Button
 
-  //   onScreenButtons.left = this.add.image(180, 300, "leftButton");
-  //   onScreenButtons.left.setInteractive();
-  //   onScreenButtons.left.on("pointerdown", () => {
-  //     onScreenButtons.left.isActive = true;
-  //     console.log("Move Left");
-  //   });
-  //   onScreenButtons.left.on("pointerup", () => {
-  //     onScreenButtons.left.isActive = false;
-  //   });
+  onScreenButtons.left = this.add.image(
+    gameWidth * 0.2,
+    gameHeight * 0.8,
+    "leftButton"
+  );
+  onScreenButtons.left.setInteractive();
+  onScreenButtons.left.on("pointerdown", () => {
+    onScreenButtons.left.isActive = true;
+    onScreenButtons.left.setScale(0.8);
+  });
+  onScreenButtons.left.on("pointerup", () => {
+    onScreenButtons.left.isActive = false;
+    onScreenButtons.left.setScale(1);
+  });
 
   //   Right Button
-  //   onScreenButtons.right = this.add.image(480, 300, "rightButton");
-  //   onScreenButtons.right.setInteractive();
-  //   onScreenButtons.right.on("pointerdown", () => {
-  //     onScreenButtons.right.isActive = true;
-  //     console.log("Move Right");
-  //   });
-  //   onScreenButtons.right.on("pointerup", () => {
-  //     onScreenButtons.right.isActive = false;
-  //   });
+  onScreenButtons.right = this.add.image(
+    gameWidth * 0.8,
+    gameHeight * 0.8,
+    "rightButton"
+  );
+  onScreenButtons.right.setInteractive();
+  onScreenButtons.right.on("pointerdown", () => {
+    onScreenButtons.right.isActive = true;
+    onScreenButtons.right.setScale(0.8);
+  });
+  onScreenButtons.right.on("pointerup", () => {
+    onScreenButtons.right.isActive = false;
+    onScreenButtons.right.setScale(1);
+  });
 
   //   Score
 
@@ -62,7 +78,9 @@ function create() {
     fill: "#000",
   });
 
-  this.player = this.physics.add.sprite(320, 300, "codey").setScale(0.5);
+  this.player = this.physics.add
+    .sprite(gameWidth * 0.5, 300, "codey")
+    .setScale(0.5);
 
   this.player.setCollideWorldBounds(true);
 
@@ -98,10 +116,15 @@ function create() {
     bugGenLoop.destroy();
     this.physics.pause();
 
-    this.add.text(280, 150, "Game Over \n Click HERE to Restart", {
-      fontSize: "15px",
-      fill: "#000",
-    });
+    this.add
+      .text(280, 150, "Game Over \n Click HERE to Restart", {
+        fontSize: "15px",
+        fill: "#000",
+      })
+      .setInteractive()
+      .on("pointerdown", () => {
+        this.scene.restart();
+      });
 
     // this.input.on("pointerdown", () => {
     //   this.scene.restart();
@@ -114,9 +137,9 @@ function create() {
 function update() {
   const cursors = this.input.keyboard.createCursorKeys();
 
-  if (cursors.left.isDown /* ||onScreenButtons.left.isActive*/) {
+  if (cursors.left.isDown || onScreenButtons.left.isActive) {
     this.player.setVelocityX(-200);
-  } else if (cursors.right.isDown /*|| onScreenButtons.right.isActive*/) {
+  } else if (cursors.right.isDown || onScreenButtons.right.isActive) {
     this.player.setVelocityX(200);
   } else {
     this.player.setVelocityX(0);
